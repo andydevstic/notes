@@ -1,13 +1,13 @@
 module.exports = {
     pgDatabase: {
-        user: '',
-        host: '',
-        password: '',
-        database: '',
-        port: 0,
+        user: 'postgres',
+        host: 'localhost',
+        password: 'Csv0202',
+        database: 'postgres',
+        port: 5432,
     },
     server: {
-        host: '',
-        port: 0
+        host: 'localhost',
+        port: 3000
     }
 }

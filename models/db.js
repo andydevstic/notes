@@ -3,17 +3,23 @@ const config = require('../config/config')
 
 const pool = new Pool(config.pgDatabase)
 
-export function run(sql, params) {
+function run(sql, params = []) {
+	let dbClient = null
 	return pool.connect()
 		.then(client => {
+			dbClient = client
 			return client.query(sql, params)
 		})
 		.then(res => {
-			client.release()
+			dbClient.release()
 			return res
 		})
 		.catch(err => {
-			client.release()
+			dbClient.release()
 			throw err
 		})
+}
+
+module.exports = {
+	run
 }
