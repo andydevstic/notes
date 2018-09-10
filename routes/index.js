@@ -78,4 +78,24 @@ router.post('/notes/add', function(req, res) {
     })
 })
 
+router.get('/notes/view?id=:id', function(req, res) {
+  const {noteID} = req.params
+  const noteSql =
+    `SELECT * FROM tbl_notes
+     WHERE id = $1
+    `
+  const keySql =
+    `SELECT key FROM tbl_keys
+     WHERE note_id = $1
+    `
+  Promise.all([db.run(noteSql, [noteID]), db.run(keySql, [noteID])])
+    .then(([noteQueryResult, keyQueryResult]) => {
+      if (noteQueryResult.rows.length === 0) throw 'Note does not exist'
+      const note = result.rows[0]
+      console.log(note)
+      console.log(keyQueryResult.rows)
+      res.render('noteview', {note})
+    })
+})
+
 module.exports = router;
