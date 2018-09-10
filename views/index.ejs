@@ -11,9 +11,9 @@
     <ul>
       <%for (var note of notelist) {%>
       <li>
-        <%= note.key %>:
-        <a href="/notes/view?key=<%= note.key %>">
-          <%= note.title %></a>
+        <%= note.keys %>:
+        <a href="/notes/view?id=<%= note.id %>">
+          <%= note.body %></a>
       </li>
       <%
   }

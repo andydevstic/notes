@@ -9,13 +9,26 @@ router.get('/', function(req, res, next) {
      ORDER BY title ASC;
     `
   const keyListSQL = 
-    `SELECT DISTINCT key
+    `SELECT *
      FROM tbl_keys
-     ORDER BY key ASC;
+     ORDER BY note_id ASC;
     `
   Promise.all([db.run(noteListSQL), db.run(keyListSQL)])
-    .then(([noteList, keyList]) => {
-      res.render('index', {title: 'My notes', notelist: noteList, keylist: keyList})
+    .then(([noteQueryResult, keyQueryResult]) => {
+      const noteList = noteQueryResult.rows
+      const keyList = keyQueryResult.rows
+      keyList.map(item => {
+        const foundNote = noteList.find(note => note.id === item.note_id)
+        if (foundNote) {
+          if (foundNote.keys === undefined) foundNote.keys = [item.key]
+          else foundNote.keys.push(item.key)
+        }
+      })
+      noteList.map(item => {
+        item.keys = item.keys && item.keys.join(', ') || 'No key was registered'
+        return item
+      })
+      res.render('index', {title: 'My notes', notelist: noteList})
     })
     .catch(err => {
       console.log(err)
@@ -25,6 +38,44 @@ router.get('/', function(req, res, next) {
 
 router.get('/notes/add', function(req, res) {
   res.render('noteedit.ejs', {title: 'Add note', docreate: 'create', note: {}})
+})
+
+router.post('/notes/add', function(req, res) {
+  const {notekey, title, body} = req.body
+  const keyList = notekey && notekey.length > 0 && notekey.split(',') || []
+  keyList.map(item => item.toLowerCase().trim())
+  const noteSQL =
+    `INSERT INTO tbl_notes(title, body)
+     VALUES ($1, $2) RETURNING *;
+    `
+  db.run(noteSQL, [title, body])
+    .then(noteResult => {
+      if (noteResult.rowCount === 0) throw 'Cannot insert new note'
+      const noteID = noteResult.rows[0].id
+      const params = [noteID]
+      let keySQL =
+        `INSERT INTO tbl_keys(note_id, key)
+         VALUES `
+      keyList.forEach((key, index) => {
+        keySQL += `($1, $${index + 2})`
+        if (index !== keyList.length - 1) keySQL += ', '
+        else keySQL += ' '
+        params.push(key)
+      })
+      keySQL += 'RETURNING *'
+      return db.run(keySQL, params)
+    })
+    .then(keyResult => {
+      if ( keyResult.rowCount === 0 ) throw 'Cannot insert new keys'
+      res.redirect('/')
+    })
+    .catch(err => {
+      console.log(err)
+      res.render('error', {
+        message: err.message,
+        error
+      })
+    })
 })
 
 module.exports = router;
