@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "SET DEBUG=express:*&& SET REQUEST_LOG_FORMAT=common&& SET REQUEST_LOG_FILE=access.log&& nodemon ./bin/www"
   },
   "dependencies": {
+    "bcrypt": "^3.0.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "ejs": "~2.5.7",

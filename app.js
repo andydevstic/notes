@@ -17,7 +17,7 @@ app.set('view engine', 'ejs');
 
 // Config Logging system
 if (process.env.REQUEST_LOG_FILE) {
-  let logDirectory = path.dirname(REQUEST_LOG_FILE)
+  let logDirectory = path.dirname(process.env.REQUEST_LOG_FILE)
   if ( !fs.existsSync(logDirectory) ) fs.mkdirsSync(logDirectory)
   accessLogStream = FileStreamRotator.getStream({
     filename: process.env.REQUEST_LOG_FILE,
