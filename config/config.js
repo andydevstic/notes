@@ -2,7 +2,7 @@ module.exports = {
     pgDatabase: {
         user: 'postgres',
         host: 'localhost',
-        password: 'Csv0202',
+        password: 'hellokitty123',
         database: 'postgres',
         port: 5432,
     },

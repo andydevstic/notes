@@ -18,8 +18,8 @@
     </p>
     <% if (notekey) { %>
     <hr />
-    <p><a href="/notes/destroy?key=<%= notekey %>">Delete</a>
-        | <a href="/notes/edit?key=<%= notekey %>">Edit</a></p>
+    <p><a href="/notes/destroy?id=<%= note.id %>">Delete</a>
+        | <a href="/notes/edit?id=<%= note.id %>">Edit</a></p>
     <% } %>
     <% include footer %>
 </body>

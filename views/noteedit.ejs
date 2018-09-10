@@ -2,30 +2,26 @@
 <html>
 
 <head>
-    <% include headerStuff %>
+  <% include headerStuff %>
 </head>
 
 <body>
-    <% include pageHeader %>
-    <form method='POST' action='/notes/add'>
-        <input type='hidden' name='docreate' value='<%=
-docreate ? "create" : "update"%>'>
-        <p>Key:
-            <% if (docreate) { %>
-            <input type='text' name='notekey' value='' />
-            <% } else { %>
-            <%= note ? notekey : "" %>
-            <input type='hidden' name='notekey' value='<%=
-note ? notekey : "" %>' />
-            <% } %>
-        </p>
-        <p>Title: <input type='text' name='title' value='<%=
-note ? note.title : "" %>' /></p>
-        <br /><textarea rows=5 cols=40 name='body'><%=
-note ? note.body : "" %></textarea>
-        <br /><input type='submit' value='Submit' />
-    </form>
-    <% include footer %>
+  <% include pageHeader %>
+  <form method='POST' action='/notes/edit'>
+    <input type='hidden' name='id' value='<%= note.id %>'>
+    <p>Key:
+      <% if (docreate) { %>
+      <input type='text' name='notekey' value='' />
+      <% } else { %>
+      <%= notekey ? notekey : "" %>
+      <input type='hidden' name='notekey' value='<%=note ? notekey : "" %>' />
+      <% } %>
+    </p>
+    <p>Title: <input type='text' name='title' value='<%=note ? note.title : "" %>' /></p>
+    <br /><textarea rows=5 cols=40 name='body'><%=note ? note.body : "" %></textarea>
+    <br /><input type='submit' value='Submit' />
+  </form>
+  <% include footer %>
 </body>
 
 </html>
